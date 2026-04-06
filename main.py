@@ -5,6 +5,7 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
 
 # =========================
 # 🎨 PAGE CONFIG
@@ -89,6 +90,9 @@ for col in df_encoded.columns:
 X = df_encoded.select_dtypes(include=["int64", "float64"])
 X = X.fillna(X.mean())
 
+scaler = StandardScaler()
+x_scaled = scaler.fit_transform(X)
+
 # =========================
 # 📉 ELBOW METHOD
 # =========================
@@ -98,7 +102,7 @@ st.subheader("📉 Optimal Cluster Detection")
 wcss = []
 for k in range(1, 11):
     km = KMeans(n_clusters=k, random_state=42)
-    km.fit(X)
+    km.fit(x_scaled)
     wcss.append(km.inertia_)
 
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -118,7 +122,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 # =========================
 k = 3
 model = KMeans(n_clusters=k, random_state=42)
-df["Cluster"] = model.fit_predict(X)
+df["Cluster"] = model.fit_predict(x_scaled)
 
 # =========================
 # 🧠 SEGMENT NAMING
@@ -154,7 +158,7 @@ st.markdown('<div class="card">', unsafe_allow_html=True)
 st.subheader("📍 Customer Segments Map")
 
 pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X)
+X_pca = pca.fit_transform(x_scaled)
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
@@ -168,6 +172,8 @@ with col2:
     ax2.set_title("Segmentation Map", fontsize=10)
     ax2.set_xlabel("PCA 1", fontsize=8)
     ax2.set_ylabel("PCA 2", fontsize=8)
+    ax2.set_xlim(-5, 5)
+    ax2.set_ylim(-5, 5)
 
     plt.tight_layout()
     st.pyplot(fig2)
