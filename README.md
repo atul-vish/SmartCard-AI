@@ -6,8 +6,7 @@ SmartCard-AI is an AI-powered customer segmentation web application that uses **
 
 ## Live Demo
 
-[Click here to use the app](#)  
-*(Add your Streamlit link here after deployment)*
+[Click here to use the app](https://smartcard-ai-clustering.streamlit.app/)  
 
 ---
 
